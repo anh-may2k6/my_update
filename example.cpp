@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -19,8 +20,20 @@ int calculate_age(const string &birth){
     char slash;
     stringstream ss(birth);
     ss >> d >> slash >> m >> slash >> y;
-    int current_year = 2025;
-    return current_year-y;
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+
+    int cur_day = ltm->tm_mday;
+    int cur_moth = 1 + ltm->tm_mon;
+    int cur_year = 1900 + ltm->tm_year;
+
+    int age = cur_year - y;
+
+    if(cur_moth < m || (cur_moth == m && cur_day < d)){
+        age--;
+    }
+
+    return age;
 }
 
 bool cmp(const student &a,const student &b){
